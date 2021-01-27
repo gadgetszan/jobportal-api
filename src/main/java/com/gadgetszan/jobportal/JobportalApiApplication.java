@@ -27,7 +27,7 @@ public class JobportalApiApplication {
 
 	@Bean
 	public FilterRegistrationBean corsFilter() {
-		System.out.println("test");
+
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
 		config.addAllowedOrigin("*");
