@@ -7,7 +7,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 class JobportalApiApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void contextLoads()
+	{
+		//Test data
+		System.out.println("Test");
+
 	}
 
 }
