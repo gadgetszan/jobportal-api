@@ -8,6 +8,7 @@ class JobportalApiApplicationTests {
 
 	@Test
 	void contextLoads() {
+		System.out.println("Test Commit");
 	}
 
 }
