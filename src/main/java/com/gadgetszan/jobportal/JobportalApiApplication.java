@@ -37,4 +37,5 @@ public class JobportalApiApplication {
 		bean.setOrder(0);
 		return bean;
 	}
+
 }
