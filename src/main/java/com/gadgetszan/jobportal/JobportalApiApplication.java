@@ -1,5 +1,6 @@
 package com.gadgetszan.jobportal;
 
+import com.gadgetszan.jobportal.Filter.AuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -38,5 +39,14 @@ public class JobportalApiApplication {
 		bean.setOrder(0);
 		return bean;
 	}
+	@Bean
+	public FilterRegistrationBean<AuthFilter> filterRegistrationBean() {
+		FilterRegistrationBean<AuthFilter> registrationBean = new FilterRegistrationBean<>();
+		AuthFilter authFilter = new AuthFilter();
+		registrationBean.setFilter(authFilter);
+		registrationBean.addUrlPatterns("/api/jobs/*");
+		return registrationBean;
+	}
+
 
 }
