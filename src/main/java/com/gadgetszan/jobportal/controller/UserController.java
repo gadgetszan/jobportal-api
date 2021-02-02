@@ -8,11 +8,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +42,16 @@ public class UserController {
         User user = userService.validateUser(email,password);
         return new ResponseEntity<>(generateJWToken(user),HttpStatus.OK);
     };
+
+    @PutMapping("{userId}")
+        public ResponseEntity<Map<String, Boolean>> resetPassword(HttpServletRequest request,
+                                                                  @PathVariable("userId") Integer userId,
+                                                                  @RequestBody User user) {
+        userService.resetPassword(userId, user);
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("Success", true);
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
 
     private Map<String,String> generateJWToken(User user){
       long timestamp = System.currentTimeMillis();

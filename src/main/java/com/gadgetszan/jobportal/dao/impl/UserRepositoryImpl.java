@@ -24,6 +24,7 @@ public class UserRepositoryImpl implements UserRepository {
             "FROM JP_USERS WHERE USER_ID = ?";
     private static final String SQL_FIND_BY_EMAIL = "SELECT USER_ID, FIRST_NAME,LAST_NAME,EMAIL,PASSWORD,USER_TYPE " +
             "FROM JP_USERS WHERE EMAIL = ?";
+    public static final String SQL_UPDATE_PASSWORD = "UPDATE JP_USERS SET PASSWORD = ? WHERE USER_ID = ?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -70,6 +71,17 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User findById(Integer userId) {
         return jdbcTemplate.queryForObject(SQL_FIND_BY_ID,new Object[]{userId},userRowMapper);
+    }
+
+    @Override
+    public void reset(Integer userId, User user) throws JpAuthException {
+        try {
+            String hashedPassword = BCrypt.hashpw(user.getPassword(),BCrypt.gensalt(10));
+            jdbcTemplate.update(SQL_UPDATE_PASSWORD, hashedPassword, userId);
+        }catch (Exception e){
+            System.out.println(e);
+            throw new JpAuthException("Reset password failed!");
+        }
     }
 
     private RowMapper<User> userRowMapper = ((rs, rowNum) ->{

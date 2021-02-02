@@ -17,7 +17,7 @@ import org.springframework.web.filter.CorsFilter;
 @SpringBootApplication
 public class JobportalApiApplication {
 	public static void main(String[] args) {
-		System.out.println("Commit Testing");
+//		System.out.println("Commit Testing");
 		//SpringApplication.run(JobportalApiApplication.class, args);
 		new SpringApplicationBuilder(JobportalApiApplication.class)
 				.profiles("dev")

@@ -9,4 +9,5 @@ public interface UserRepository {
     User findByEmailAndPassword(String email, String password) throws JpAuthException;
     Integer getCountByEmail(String email);
     User findById(Integer userId);
+    void reset(Integer userId, User user) throws JpAuthException;
 }

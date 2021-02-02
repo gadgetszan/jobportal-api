@@ -34,4 +34,10 @@ public class UserServiceImpl implements UserService {
         Integer userId = userRepository.create(firstName,lastName,email,password,userType);
         return userRepository.findById(userId);
     }
+
+    @Override
+    public void resetPassword(Integer userId,  User user) throws JpAuthException {
+        userRepository.reset(userId, user);
+    }
+
 }
