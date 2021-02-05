@@ -1,6 +1,9 @@
 package com.gadgetszan.jobportal.controller;
 
 import com.gadgetszan.jobportal.Constants;
+import com.gadgetszan.jobportal.dao.UserRepository;
+import com.gadgetszan.jobportal.dao.impl.UserRepositoryImpl;
+import com.gadgetszan.jobportal.exceptions.JpAuthException;
 import com.gadgetszan.jobportal.model.User;
 import com.gadgetszan.jobportal.services.UserService;
 import io.jsonwebtoken.Jwts;
@@ -8,11 +11,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +45,48 @@ public class UserController {
         User user = userService.validateUser(email,password);
         return new ResponseEntity<>(generateJWToken(user),HttpStatus.OK);
     };
+
+    //Method to reset password or assigning a password replacement key
+    @PutMapping("/reset")
+    public ResponseEntity<Map<String, String>> resetPass(HttpServletRequest request,
+                                                          @RequestBody Map<String,Object> userMap,
+                                                          User user)
+    {
+        try
+        {
+            String email = (String) userMap.get("email");
+            userService.resetPassword(email,user);
+            Map<String, String> map = new HashMap<>();
+            map.put("Your reset key: ", UserRepositoryImpl.key);
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        }
+        catch(Exception e)
+        {
+            throw new JpAuthException("An error has acquired");
+        }
+
+    }
+
+
+    @PutMapping("/changePassword")
+    public ResponseEntity<Map<String, Boolean>> changePass(HttpServletRequest request,
+                                                         @RequestBody Map<String,Object> userMap)
+    {
+
+            //To validate user credentials/info
+            String email = (String) userMap.get("email");
+            String password = (String) userMap.get("password");
+            System.out.println(password);
+            userService.validateUser(email,password);
+
+            //Assigning a new password
+            password = (String) userMap.get("newPassword");
+            userService.changePassword(email,password);
+            Map<String, Boolean> map = new HashMap<>();
+            map.put("Changed password successfully ",true);
+            return new ResponseEntity<>(map, HttpStatus.OK);
+
+    }
 
     private Map<String,String> generateJWToken(User user){
       long timestamp = System.currentTimeMillis();
